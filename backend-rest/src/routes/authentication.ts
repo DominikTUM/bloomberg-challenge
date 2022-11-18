@@ -11,9 +11,9 @@ app.use(express.urlencoded({ extended: true }));
 
 app.post('/auth', async (req, res) => {
     const {email, password} = req.body;
-  
+
     // Query user
-    
+
     // Validate user password
     if (true) {
 

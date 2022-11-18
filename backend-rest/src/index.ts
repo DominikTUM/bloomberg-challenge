@@ -33,3 +33,7 @@ app.get('/', (req, res) => {
 
 // Setup endpoints
 app.use(authentication);
+
+app.listen(process.env.APP_PORT, () => {
+    console.log(`Connected`);
+});
