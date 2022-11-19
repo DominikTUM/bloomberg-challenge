@@ -37,7 +37,7 @@ def processOrder(cursor, mydb, orderResult):
             buyerID = orderResult[6]
             # find matching seller
             cursor.execute("SELECT * FROM Exchange WHERE Security='" + str(security) + "' AND Side='sell' AND Price<=" + str(buyingPrice) + " ORDER BY ExchangeID asc LIMIT 1")
-            result = cursor.fetchone();
+            result = cursor.fetchone()
             if (result == None):
                 #if no seller found, save entry into exchange table
                 sqlStatement = "INSERT INTO Exchange (Security, UserID, Price, Qty, Side) VALUES('" + str(security) + "', " + str(
@@ -58,7 +58,7 @@ def processOrder(cursor, mydb, orderResult):
             sellerID = orderResult[6]
             sellingOrderID = orderID
             cursor.execute("SELECT * FROM `Exchange` WHERE Security='" + str(security) + "' AND Side='buy' AND Price>=" + str(sellingPrice) + " ORDER BY ExchangeID asc LIMIT 1")
-            result = cursor.fetchone();
+            result = cursor.fetchone()
             if (result == None):
                 # if no buyer found, save entry into exchange table
                 cursor.execute(
