@@ -12,7 +12,8 @@ def process(orderID): # This method returns 'Flask Dockerized', which is display
         host = "localhost",
         port = "3308",
         user = "root",
-        password = "root"
+        password = "root",
+        database="test_db"
     )
     # Creating an instance of 'cursor' class
     # which is used to execute the 'SQL'
@@ -20,68 +21,103 @@ def process(orderID): # This method returns 'Flask Dockerized', which is display
     cursor = mydb.cursor()
     # Show database
     cursor.execute("SELECT * FROM `Bookkeeping` Where OrderID=" + str(orderID))
-    output = ""
-    for x in cursor:
-        output = output + str(x)
-    if (cursor["task"] == "add"):
-        security = cursor["security"]
-        if (cursor["side"] == "buy"):
-            buyingPrice = cursor["price"]
-            buyingQty = cursor["qty"]
-            buyingID = cursor["ExchangeID"]
-            buyerID = cursor["userID"]
+    result = cursor.fetchone()
+    return processOrder(cursor, mydb, result)
+def processOrder(cursor, mydb, orderResult):
+    if (orderResult[4] == "add"):
+        security = orderResult[1]
+        side = orderResult[5]
+        orderID = orderResult[0]
+        sellingOrderID = None
+        buyingOrderID = None
+        if (side == "buy"):
+            buyingOrderID = orderID
+            buyingPrice = orderResult[3]
+            buyingQty = orderResult[2]
+            buyerID = orderResult[6]
             # find matching seller
-            cursor.execute("SELECT * FROM `Exchange` WHERE Security=" + str(security) + " AND Side='sell' AND Price<=" + str(buyingPrice) + "ORDER BY ExchangeID asc LIMIT 1")
-            if (cursor == None):
+            cursor.execute("SELECT * FROM Exchange WHERE Security='" + str(security) + "' AND Side='sell' AND Price<=" + str(buyingPrice) + " ORDER BY ExchangeID asc LIMIT 1")
+            result = cursor.fetchone()
+            if (result == None):
                 #if no seller found, save entry into exchange table
-                cursor.execute(
-                    "INSERT INTO 'Exchange' (Security, userID, price, qty, side) VALUES(" + str(security) + ", " + str(
-                        buyerID) + ", " + str(buyingPrice) + ", " + str(buyingQty) + ", 'buy')")
-                return
-            sellingPrice = cursor["price"]
-            sellingQty = cursor["qty"]
-            sellingID = cursor["ExchangeID"]
-            sellerID = cursor["userID"]
-        if (cursor["side"] == "sell"):
-            sellingPrice = cursor["price"]
-            sellingQty = cursor["qty"]
-            sellingID = cursor["ExchangeID"]
-            sellerID = cursor["userID"]
-            cursor.execute("SELECT * FROM `Exchange` WHERE Security=" + str(security) + " AND Side='sell' AND Price=>" + str(sellingPrice) + "ORDER BY ExchangeID asc LIMIT 1")
-            if (cursor == None):
+                sqlStatement = "INSERT INTO Exchange (Security, UserID, Price, Qty, Side) VALUES('" + str(security) + "', " + str(
+                        buyerID) + ", " + str(buyingPrice) + ", " + str(buyingQty) + ", 'buy')"
+                print(sqlStatement)
+                cursor.execute(sqlStatement)
+                mydb.commit()
+                cursor.close()
+                return "Looking for sellers"
+            sellingPrice = result[3]
+            sellingQty = result[4]
+            exchangeID = result[0]
+            sellingOrderID = exchangeID
+            sellerID = result[2]
+        if (side == "sell"):
+            sellingPrice = orderResult[3]
+            sellingQty = orderResult[2]
+            sellerID = orderResult[6]
+            sellingOrderID = orderID
+            cursor.execute("SELECT * FROM `Exchange` WHERE Security='" + str(security) + "' AND Side='buy' AND Price>=" + str(sellingPrice) + " ORDER BY ExchangeID asc LIMIT 1")
+            result = cursor.fetchone()
+            if (result == None):
                 # if no buyer found, save entry into exchange table
                 cursor.execute(
-                    "INSERT INTO 'Exchange' (Security, userID, price, qty, side) VALUES(" + str(security) + ", " + str(
+                    "INSERT INTO Exchange (Security, UserID, Price, Qty, Side) VALUES('" + str(security) + "', " + str(
                         sellerID) + ", " + str(sellingPrice) + ", " + str(sellingQty) + ", 'sell')")
-                return
-            buyingPrice = cursor["price"]
-            buyingQty = cursor["qty"]
-            security = cursor["security"]
-            buyingID = cursor["ExchangeID"]
-            buyerID = cursor["userID"]
-        output = ""
-        for x in cursor:
-            output = output + str(x)
-        newQty = sellingQty - buyingQty
+                mydb.commit()
+                cursor.close()
+                return "Looking for buyers"
+            buyingPrice = result[3]
+            buyingQty = result[4]
+            exchangeID = result[0]
+            buyingOrderID = exchangeID
+            buyerID = result[2]
         if (sellingQty < buyingQty):
-            #seller sells everything
-            cursor.execute("INSERT INTO 'Matches' (Security, Seller, Buyer, Price, Qty) VALUES(" + str(sellerID) + ", " + str(buyerID) + ", " + str(buyingPrice) + ", " + str(sellingQty) + ")")
-            cursor.execute("DELETE FROM `Exchange` WHERE ExchangeID =" + str(sellingID))
-            cursor.execute("UPDATE `Exchange` SET qty = " + str(buyingQty - sellingQty) + "WHERE userID = " + str(buyingID))
-            # call function recurs to see, if rest can be also allocated
-            return process(orderID)
+            # seller sells everything
+            cursor.execute(
+                "INSERT INTO Matches (Security, Seller, SellerOrderID, Buyer, BuyerOrderID, Price, Qty) VALUES ('" + str(security) + "', " + str(sellerID) + ", " + str(sellingOrderID) + ", " + str(
+                    buyerID) + ", " + str(buyingOrderID) + ", " + str(buyingPrice) + ", " + str(sellingQty) + ")")
+            if side == "sell":
+                # if calling order is sell, then order can be consumed and matched buy order must be reduced
+                cursor.execute(
+                    "UPDATE `Exchange` SET qty = " + str(buyingQty - sellingQty) + " WHERE ExchangeID = " + str(
+                        exchangeID))
+                mydb.commit()
+            if side == "buy":
+                # consumed the sell offer and continue
+                cursor.execute("DELETE FROM `Exchange` WHERE ExchangeID =" + str(exchangeID))
+                y = list(orderResult)
+                y[2] = buyingQty - sellingQty
+                orderResult = tuple(y)
+                mydb.commit()
+                return processOrder(cursor, mydb, orderResult)
+        #Check if even or uneven match
         if (sellingQty == buyingQty):
             # seller and buyer match
-            cursor.execute("INSERT INTO 'Matches' (Security, Seller, Buyer, Price, Qty) VALUES(" + str(sellerID) + ", " + str(buyerID) + ", " + str(buyingPrice) + ", " + str(sellingQty) + ")")
-            cursor.execute("DELETE FROM `Exchange` WHERE ExchangeID =" + str(buyingID))
-            cursor.execute("DELETE FROM `Exchange` WHERE ExchangeID =" + str(sellingID))
+            cursor.execute(
+                "INSERT INTO Matches (Security, Seller, SellerOrderID, Buyer, BuyerOrderID, Price, Qty) VALUES('" + str(security) + "', " + str(
+                    sellerID) + ", " + str(sellingOrderID) + ", " + str(buyerID) + ", " + str(buyingOrderID) + ", " + str(buyingPrice) + ", " + str(sellingQty) + ")")
+            cursor.execute("DELETE FROM `Exchange` WHERE ExchangeID =" + str(exchangeID))
+            mydb.commit()
         if (sellingQty > buyingQty):
             # buyer buys everything
-            cursor.execute("INSERT INTO 'Matches' (Security, Seller, Buyer, Price, Qty) VALUES(" + str(sellerID) + ", " + str(buyerID) + ", " + str(buyingPrice) + ", " + str(buyingQty) + ")")
-            cursor.execute("DELETE FROM `Exchange` WHERE ExchangeID =" + str(buyingID))
-            cursor.execute("UPDATE `Exchange` SET qty = " + str(sellingQty - buyingQty) + "WHERE userID = " + str(sellingID))
-            #call function recurs to see, if rest can be also allocated
-            return process(orderID)
+            cursor.execute(
+                "INSERT INTO Matches (Security, Seller, SellerOrderID, Buyer, BuyerOrderID, Price, Qty) VALUES('" + str(security) + "', " + str(
+                    sellerID) + str(sellingOrderID) + ", " + str(buyerID) + ", " + str(buyingOrderID) + ", " + str(buyingPrice) + ", " + str(buyingQty) + ")")
+            if side == "buy":
+                # if calling order is buy, then order can be consumed and matched sell order must be reduced
+                cursor.execute(
+                    "UPDATE `Exchange` SET qty = " + str(sellingQty - buyingQty) + " WHERE ExchangeID = " + str(
+                        exchangeID))
+                mydb.commit()
+            if side == "sell":
+                #consumed the buy offer and continue
+                cursor.execute("DELETE FROM `Exchange` WHERE ExchangeID =" + str(exchangeID))
+                y = list(orderResult)
+                y[2] = sellingQty - buyingQty
+                orderResult = tuple(y)
+                mydb.commit()
+                return processOrder(cursor, mydb, orderResult)
     return "operation executed"
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=8090) # This statement starts the server on your local machine.
