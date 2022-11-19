@@ -1,28 +1,26 @@
-import {Column, Entity, ManyToOne, PrimaryColumn} from "typeorm";
-import exchangeDataSource from "./exchange-data-source";
-import User from "./user";
+import {Column, Entity, PrimaryColumn} from 'typeorm';
+import exchangeDataSource from './exchange-data-source';
 
-const userSelector = () => User;
-@Entity()
+@Entity('Match')
 class Match {
   @PrimaryColumn()
-  matchId: number;
+    matchId: number;
 
   @Column()
-  security: string;
+    security: string;
 
   @Column()
-  qty: number;
+    qty: number;
 
   @Column()
-  price: string;
+    price: string;
 
-  @ManyToOne(userSelector, user => user.bookEntries)
-  seller: User
+  @Column()
+    sellerId: number;
 
-  @ManyToOne(userSelector, user => user.bookEntries)
-  buyer: User
+  @Column()
+    buyerId: number;
 }
 
-export const matches = exchangeDataSource.getRepository(Match);
+export const matches = () => exchangeDataSource.getRepository(Match);
 export default Match;

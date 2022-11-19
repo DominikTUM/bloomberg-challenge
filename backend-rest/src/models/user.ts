@@ -1,52 +1,38 @@
-import {Column, Entity, OneToMany, PrimaryColumn} from "typeorm";
-import Bookkeeping from "./bookkeeping";
-import exchangeDataSource from "./exchange-data-source";
-import Match from "./match";
+import {Column, Entity, PrimaryColumn} from 'typeorm';
+import exchangeDataSource from './exchange-data-source';
 import crypto from 'crypto';
 
-const matchSelector = () => Match;
-export enum Role { USER = "user", ADMIN = "admin" };
+export enum Role { USER = 'user', ADMIN = 'admin' };
 
-@Entity()
+@Entity('User')
 class User {
   @PrimaryColumn()
-  userId: number;
+    userId: number;
 
   @Column()
-  email: string
+    email: string;
 
   @Column()
-  name: string
+    name: string;
 
   @Column()
-  password: string;
+    password: string;
 
-  @Column({
-    type: "enum",
-    enum: Role,
-    array: true,
-    default: [Role.ADMIN]
-  })
-  roles: Role[]
-
-  @OneToMany(() => Bookkeeping, user => user)
-  bookEntries: Bookkeeping[]
-
-  @OneToMany(matchSelector, match => match.buyer)
-  buys: Match[]
-
-  @OneToMany(matchSelector, match => match.seller)
-  sells: Match[]
+  @Column('text')
+    role: Role;
 
   public set setPassword(password: string) {
-    this.password = crypto.createHash('sha256').update(`${password}${this.userId}`).digest('hex');
+    console.log(this.userId);
+    this.password = crypto.createHash('sha256')
+        .update(`${password}${this.userId}`).digest('hex');
   }
 
   public validatePassword(password: string) {
-    return crypto.createHash('sha256').update(`${password}${this.userId}`).digest('hex') === this.password
+    return crypto.createHash('sha256')
+        .update(`${password}${this.userId}`).digest('hex')
+        .toLowerCase() === this.password.toLowerCase();
   }
-
 }
 
-export const users = exchangeDataSource.getRepository(User);
+export const users = () => exchangeDataSource.getRepository(User);
 export default User;

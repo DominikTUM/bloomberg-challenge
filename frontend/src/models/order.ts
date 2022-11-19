@@ -1,4 +1,5 @@
-import {Operation, Side} from '../models';
+export type Operation = 'add' | 'del';
+export type Side = 'buy' | 'sell';
 
 interface CreateOrderCommand {
   qty: number;

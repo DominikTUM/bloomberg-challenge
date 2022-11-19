@@ -3,12 +3,12 @@ declare module 'common' {
       id: number;
       email: string;
       name: string;
-      roles: string[];
+      role: string;
    }
 }
 
 declare namespace Express {
-    export interface Request {
-       user?: AuthorizedUser
-    }
- }
+   export interface Request {
+      user?: AuthorizedUser
+   }
+}

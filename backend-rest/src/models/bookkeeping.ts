@@ -1,42 +1,32 @@
-import {Column, Entity, ManyToOne, PrimaryColumn} from "typeorm";
-import exchangeDataSource from "./exchange-data-source";
-import User from "./user";
+import {Column, Entity, PrimaryColumn} from 'typeorm';
+import exchangeDataSource from './exchange-data-source';
 
-export type Operation = "add" | "del";
-export type Side = "buy" | "sell";
+export type Operation = 'add' | 'del';
+export type Side = 'buy' | 'sell';
 
-@Entity()
+@Entity('Bookkeeping')
 class Bookkeeping {
   @PrimaryColumn()
-  orderId: number;
+    orderId: number;
 
-  @Column({
-    type: "enum",
-    enum: ["del", "add"],
-    default: "del"
-  })
-  operation: Operation;
+  @Column('text')
+    operation: Operation;
 
-  @Column({
-    type: "enum",
-    enum: ["buy", "sell"],
-    default: "buy"
-  })
-  side: Side;
+  @Column('text')
+    side: Side;
 
   @Column()
-  security: string;
+    security: string;
 
   @Column()
-  qty: number;
+    qty: number;
 
   @Column()
-  price: number;
+    price: number;
 
-  @Column("userId")
-  @ManyToOne(() => User, user => user.bookEntries)
-  user: User
+  @Column()
+    userId: number;
 }
 
-export const bookkeepings = exchangeDataSource.getRepository(Bookkeeping);
+export const bookkeepings = () => exchangeDataSource.getRepository(Bookkeeping);
 export default Bookkeeping;
