@@ -28,7 +28,10 @@ def processOrder(cursor, mydb, orderResult):
         security = orderResult[1]
         side = orderResult[5]
         orderID = orderResult[0]
+        sellingOrderID = None
+        buyingOrderID = None
         if (side == "buy"):
+            buyingOrderID = orderID
             buyingPrice = orderResult[3]
             buyingQty = orderResult[2]
             buyerID = orderResult[6]
@@ -47,11 +50,13 @@ def processOrder(cursor, mydb, orderResult):
             sellingPrice = result[3]
             sellingQty = result[4]
             exchangeID = result[0]
+            sellingOrderID = exchangeID
             sellerID = result[2]
         if (side == "sell"):
             sellingPrice = orderResult[3]
             sellingQty = orderResult[2]
             sellerID = orderResult[6]
+            sellingOrderID = orderID
             cursor.execute("SELECT * FROM `Exchange` WHERE Security='" + str(security) + "' AND Side='buy' AND Price>=" + str(sellingPrice) + " ORDER BY ExchangeID asc LIMIT 1")
             result = cursor.fetchone();
             if (result == None):
@@ -65,12 +70,13 @@ def processOrder(cursor, mydb, orderResult):
             buyingPrice = result[3]
             buyingQty = result[4]
             exchangeID = result[0]
+            buyingOrderID = exchangeID
             buyerID = result[2]
         if (sellingQty < buyingQty):
             # seller sells everything
             cursor.execute(
-                "INSERT INTO Matches (Security, Seller, Buyer, Price, Qty) VALUES ('" + str(security) + "', " + str(sellerID) + ", " + str(
-                    buyerID) + ", " + str(buyingPrice) + ", " + str(sellingQty) + ")")
+                "INSERT INTO Matches (Security, Seller, SellerOrderID, Buyer, BuyerOrderID, Price, Qty) VALUES ('" + str(security) + "', " + str(sellerID) + ", " + str(sellingOrderID) + ", " + str(
+                    buyerID) + ", " + str(buyingOrderID) + ", " + str(buyingPrice) + ", " + str(sellingQty) + ")")
             if side == "sell":
                 # if calling order is sell, then order can be consumed and matched buy order must be reduced
                 cursor.execute(
@@ -89,15 +95,15 @@ def processOrder(cursor, mydb, orderResult):
         if (sellingQty == buyingQty):
             # seller and buyer match
             cursor.execute(
-                "INSERT INTO Matches (Security, Seller, Buyer, Price, Qty) VALUES('" + str(security) + "', " + str(
-                    sellerID) + ", " + str(buyerID) + ", " + str(buyingPrice) + ", " + str(sellingQty) + ")")
+                "INSERT INTO Matches (Security, Seller, SellerOrderID, Buyer, BuyerOrderID, Price, Qty) VALUES('" + str(security) + "', " + str(
+                    sellerID) + ", " + str(sellingOrderID) + ", " + str(buyerID) + ", " + str(buyingOrderID) + ", " + str(buyingPrice) + ", " + str(sellingQty) + ")")
             cursor.execute("DELETE FROM `Exchange` WHERE ExchangeID =" + str(exchangeID))
             mydb.commit()
         if (sellingQty > buyingQty):
             # buyer buys everything
             cursor.execute(
-                "INSERT INTO Matches (Security, Seller, Buyer, Price, Qty) VALUES('" + str(security) + "', " + str(
-                    sellerID) + ", " + str(buyerID) + ", " + str(buyingPrice) + ", " + str(buyingQty) + ")")
+                "INSERT INTO Matches (Security, Seller, SellerOrderID, Buyer, BuyerOrderID, Price, Qty) VALUES('" + str(security) + "', " + str(
+                    sellerID) + str(sellingOrderID) + ", " + str(buyerID) + ", " + str(buyingOrderID) + ", " + str(buyingPrice) + ", " + str(buyingQty) + ")")
             if side == "buy":
                 # if calling order is buy, then order can be consumed and matched sell order must be reduced
                 cursor.execute(
