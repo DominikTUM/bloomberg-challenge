@@ -1,31 +1,31 @@
-import {Column, Entity, PrimaryColumn} from "typeorm";
-import exchangeDataSource from "./exchange-data-source";
+import {Column, Entity, PrimaryColumn} from 'typeorm';
+import exchangeDataSource from './exchange-data-source';
 
-export type Operation = "add" | "del";
-export type Side = "buy" | "sell";
+export type Operation = 'add' | 'del';
+export type Side = 'buy' | 'sell';
 
-@Entity()
+@Entity('Bookkeeping')
 class Bookkeeping {
   @PrimaryColumn()
-  orderId: number;
+    orderId: number;
 
   @Column('text')
-  operation: Operation;
+    operation: Operation;
 
   @Column('text')
-  side: Side;
+    side: Side;
 
   @Column()
-  security: string;
+    security: string;
 
   @Column()
-  qty: number;
+    qty: number;
 
   @Column()
-  price: number;
+    price: number;
 
   @Column()
-  userId: number
+    userId: number;
 }
 
 export const bookkeepings = () => exchangeDataSource.getRepository(Bookkeeping);

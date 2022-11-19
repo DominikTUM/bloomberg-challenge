@@ -1,34 +1,37 @@
-import {Column, Entity, PrimaryColumn} from "typeorm";
-import exchangeDataSource from "./exchange-data-source";
+import {Column, Entity, PrimaryColumn} from 'typeorm';
+import exchangeDataSource from './exchange-data-source';
 import crypto from 'crypto';
 
-export enum Role { USER = "user", ADMIN = "admin" };
+export enum Role { USER = 'user', ADMIN = 'admin' };
 
-@Entity()
+@Entity('User')
 class User {
   @PrimaryColumn()
-  userId: number;
+    userId: number;
 
   @Column()
-  email: string
+    email: string;
 
   @Column()
-  name: string
+    name: string;
 
   @Column()
-  password: string;
+    password: string;
 
   @Column('text')
-  role: Role
+    role: Role;
 
   public set setPassword(password: string) {
-    this.password = crypto.createHash('sha256').update(`${password}${this.userId}`).digest('hex');
+    console.log(this.userId);
+    this.password = crypto.createHash('sha256')
+        .update(`${password}${this.userId}`).digest('hex');
   }
 
   public validatePassword(password: string) {
-    return crypto.createHash('sha256').update(`${password}${this.userId}`).digest('hex') === this.password
+    return crypto.createHash('sha256')
+        .update(`${password}${this.userId}`).digest('hex')
+        .toLowerCase() === this.password.toLowerCase();
   }
-
 }
 
 export const users = () => exchangeDataSource.getRepository(User);

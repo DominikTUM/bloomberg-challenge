@@ -1,9 +1,11 @@
-import { Operation, Side } from "../models";
+import {Operation, Side} from '../models';
 
-export default interface CreateOrderCommand {
+interface CreateOrderCommand {
   qty: number;
   price: number;
   operation: Operation
   side: Side;
   security: string;
 }
+
+export default CreateOrderCommand;

@@ -1,13 +1,13 @@
-import { DataSource } from "typeorm";
+import {DataSource} from 'typeorm';
 import dotenv from 'dotenv';
-import Bookkeeping from "./bookkeeping";
-import Match from "./match";
-import User from "./user";
+import Bookkeeping from './bookkeeping';
+import Match from './match';
+import User from './user';
 
 dotenv.config();
 
 export default new DataSource({
-  type: "mysql",
+  type: 'mysql',
   host: process.env.DB_HOST,
   port: parseInt(process.env.DB_PORT || '', 10),
   username: process.env.DB_USER,
@@ -18,4 +18,4 @@ export default new DataSource({
   entities: [Bookkeeping, Match, User],
   subscribers: [],
   migrations: [],
-})
+});

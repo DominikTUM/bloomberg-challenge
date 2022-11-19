@@ -8,7 +8,7 @@ declare module 'common' {
 }
 
 declare namespace Express {
-    export interface Request {
-       user?: AuthorizedUser
-    }
- }
+   export interface Request {
+      user?: AuthorizedUser
+   }
+}

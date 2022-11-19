@@ -1,5 +1,7 @@
-export default interface CreateUserCommand {
+interface CreateUserCommand {
   name: string;
   email: string;
   password: string;
 }
+
+export default CreateUserCommand;

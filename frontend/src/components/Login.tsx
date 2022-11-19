@@ -35,7 +35,7 @@ export default function Login() {
     if (res.status === 200) {
       dispatch(storeToken({jwt: res.data.jwt}));
       dispatch(init());
-      navigate('/home');
+      navigate('/dashboard');
     } else {
       setErrorMsg(res.data);
       setTimeout(() => setErrorMsg(undefined), 5000);

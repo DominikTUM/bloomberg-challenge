@@ -1,25 +1,25 @@
-import {Column, Entity, JoinTable, ManyToOne, PrimaryColumn} from "typeorm";
-import exchangeDataSource from "./exchange-data-source";
+import {Column, Entity, PrimaryColumn} from 'typeorm';
+import exchangeDataSource from './exchange-data-source';
 
-@Entity()
+@Entity('Match')
 class Match {
   @PrimaryColumn()
-  matchId: number;
+    matchId: number;
 
   @Column()
-  security: string;
+    security: string;
 
   @Column()
-  qty: number;
+    qty: number;
 
   @Column()
-  price: string;
+    price: string;
 
   @Column()
-  sellerId: number
+    sellerId: number;
 
   @Column()
-  buyerId: number
+    buyerId: number;
 }
 
 export const matches = () => exchangeDataSource.getRepository(Match);
