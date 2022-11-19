@@ -2,24 +2,22 @@ import jwt from 'jsonwebtoken';
 import bodyParser from 'body-parser';
 import express from 'express';
 import { AuthorizedUser } from 'common';
-import { matches } from '../models';
+import { bookkeepings } from '../models';
 import {Role} from '../models/user';
-import Match from '../models/match';
+import Bookkeeping from '../models/bookkeeping';
 
 const app = express();
 
 app.use(bodyParser.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.get('/match', async (req, res) => {
+app.get('/bookkeeping', async (req, res) => {
     const { id, roles } = req.user as AuthorizedUser;
-    let queriedMatches: Match[];
+    let queriedMatches: Bookkeeping[];
     if (roles.includes(Role.ADMIN)) {
-        queriedMatches = await matches.find();
+        queriedMatches = await bookkeepings.find();
     } else {
-        queriedMatches = await matches.find({where: [
-            {seller: {id}}, {buyer: {id}}
-        ]})
+        queriedMatches = await bookkeepings.find({where: {user: {id}}});
     }
 
     res.status(200).send(queriedMatches);

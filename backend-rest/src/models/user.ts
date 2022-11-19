@@ -1,6 +1,6 @@
 import {Column, Entity, OneToMany, PrimaryColumn} from "typeorm";
 import Bookkeeping from "./bookkeeping";
-import exchangeDataSource from "./ExchangeDataSource";
+import exchangeDataSource from "./exchange-data-source";
 import Match from "./match";
 import crypto from 'crypto';
 

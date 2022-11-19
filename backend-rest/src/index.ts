@@ -6,7 +6,7 @@ import authenticate from './middleware/authentication';
 import authentication from './routes/authentication';
 import order from './routes/order';
 import match from './routes/match';
-import ExchangeDataSource from './models/ExchangeDataSource';
+import ExchangeDataSource from './models/exchange-data-source';
 
 dotenv.config();
 
