@@ -20,20 +20,17 @@ app.post('/order', async (req, res) => {
     res.status(400).send(`Parameters invalid`);
     return;
   }
-  console.log(price);
   const entry = new Bookkeeping();
   entry.operation = operation;
   entry.price = price;
   entry.qty = qty;
-  console.log(entry);
   entry.security = security;
   entry.side = side;
   entry.userId = id;
-  console.log(entry);
 
-  await (await bookkeepings()).save(entry);
+  await (await bookkeepings()).insert(entry);
 
-  http.get(config.matchingEndpoint + entry.orderId, console.log);
+  http.get(config.matchingEndpoint + id, console.log);
 
   res.status(201).send('Successfully added order');
 });

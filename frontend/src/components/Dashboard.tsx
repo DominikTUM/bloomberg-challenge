@@ -4,7 +4,7 @@ import {Layout, MenuProps} from 'antd';
 import {Menu} from 'antd';
 import {logout} from '../store/tokenSlice';
 import {useAppDispatch} from '../hooks/hooks';
-import {Navigate, useNavigate} from 'react-router-dom';
+import {Navigate} from 'react-router-dom';
 import {Content, Header} from 'antd/lib/layout/layout';
 import History from './History';
 import Matches from './Matches';

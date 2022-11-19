@@ -1,4 +1,4 @@
-import {Column, Entity, PrimaryColumn} from 'typeorm';
+import {Column, Entity, Generated, PrimaryColumn} from 'typeorm';
 import exchangeDataSource from './exchange-data-source';
 import crypto from 'crypto';
 
@@ -7,6 +7,7 @@ export enum Role { USER = 'user', ADMIN = 'admin' };
 @Entity('User')
 class User {
   @PrimaryColumn()
+  @Generated("increment")
     userId: number;
 
   @Column()
