@@ -48,7 +48,7 @@ export default function History() {
                 <Card title={(item.operation === 'add'? 'Added': 'Changed') +
                   ` transaction value of ${item.qty * item.price} €`}
                 size="default" className='mid-wrapper-width'>
-                  {item.side === 'sell'?
+                  {item.side === 'buy'?
                   <Tag color="green">Buy</Tag>:
                   <Tag color="red">Sell</Tag>}
                   {item.qty} Shares @ {item.price} €
