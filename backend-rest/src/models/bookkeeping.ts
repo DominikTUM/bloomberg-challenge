@@ -1,4 +1,4 @@
-import {Column, Entity, PrimaryColumn} from 'typeorm';
+import {Column, Entity, PrimaryColumn, PrimaryGeneratedColumn} from 'typeorm';
 import exchangeDataSource from './exchange-data-source';
 
 export type Operation = 'add' | 'del';
@@ -6,7 +6,7 @@ export type Side = 'buy' | 'sell';
 
 @Entity('Bookkeeping')
 class Bookkeeping {
-  @PrimaryColumn()
+  @PrimaryGeneratedColumn()
     orderId: number;
 
   @Column()

@@ -29,8 +29,8 @@ app.post('/order', async (req, res) => {
   entry.userId = id;
 
   await (await bookkeepings()).insert(entry);
-
-  http.get(config.matchingEndpoint + id, console.log);
+;
+  http.get(config.matchingEndpoint + entry.orderId, console.log);
 
   res.status(201).send('Successfully added order');
 });

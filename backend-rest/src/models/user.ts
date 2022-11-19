@@ -7,7 +7,6 @@ export enum Role { USER = 'user', ADMIN = 'admin' };
 @Entity('User')
 class User {
   @PrimaryColumn()
-  @Generated("increment")
     userId: number;
 
   @Column()
