@@ -1,0 +1,74 @@
+:root {
+  --margin: 1rem;
+}
+
+
+#root {
+  max-width: 800px !important;
+  min-height: 100vh;
+  display: block;
+  padding: var(--margin);
+  margin: auto;
+  overflow: visible;
+}
+
+a {
+  font-weight: 500;
+}
+
+.mid-wrapper {
+  height: 100vh;
+  max-height: calc(100vh - 2 * var(--margin));
+  display: flex;
+  align-items: center;
+}
+
+.mid-wrapper>div {
+  width: 100%;
+  max-height: 100vh;
+  padding-bottom: calc(3 * var(--margin));
+}
+
+.mid-wrapper>div>* {
+  display: block;
+  margin-bottom: var(--margin);
+}
+
+a.ant-btn>span {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.button-wrapper {
+  display: block;
+  width: calc(100%);
+  margin-top: calc(-1 * var(--margin));
+  margin-left: calc(-1 * var(--margin));
+}
+
+.button-wrapper>* {
+  display: inline-block;
+  margin-top: var(--margin);
+  margin-left: var(--margin);
+}
+
+@media screen and (max-width: 450px) {
+  .button-wrapper>* {
+    width: 100%;
+    margin-top: calc(0.5 * var(--margin));
+  }
+
+  .ant-space {
+    width: 100%;
+  }
+
+  .ant-space-item>.ant-btn {
+    display: block;
+    width: 100%;
+  }
+}
+
+label {
+  font-weight: 600;
+  text-transform: uppercase;
+}

@@ -5,6 +5,7 @@ import reportWebVitals from './reportWebVitals';
 import {Provider} from 'react-redux';
 
 import 'antd/dist/antd.css';
+import './secex.css';
 
 import store from './store/store';
 
