@@ -21,7 +21,7 @@ def process(orderID): # This method returns 'Flask Dockerized', which is display
     cursor = mydb.cursor()
     # Show database
     cursor.execute("SELECT * FROM `Bookkeeping` Where OrderID=" + str(orderID))
-    result = cursor.fetchone();
+    result = cursor.fetchone()
     return processOrder(cursor, mydb, result)
 def processOrder(cursor, mydb, orderResult):
     if (orderResult[4] == "add"):
