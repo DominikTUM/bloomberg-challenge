@@ -12,13 +12,13 @@ app.use(bodyParser.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.get('/match', async (req, res) => {
-    const { id, roles } = req.user as AuthorizedUser;
+    const { id, role } = req.user as AuthorizedUser;
     let queriedMatches: Match[];
-    if (roles.includes(Role.ADMIN)) {
-        queriedMatches = await matches.find();
+    if (role === Role.ADMIN) {
+        queriedMatches = await matches().find();
     } else {
-        queriedMatches = await matches.find({where: [
-            {seller: {userId: id}}, {buyer: {userId: id}}
+        queriedMatches = await matches().find({where: [
+            {sellerId: id}, {buyerId: id}
         ]})
     }
 

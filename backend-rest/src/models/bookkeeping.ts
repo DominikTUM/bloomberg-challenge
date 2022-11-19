@@ -1,6 +1,5 @@
-import {Column, Entity, ManyToOne, PrimaryColumn} from "typeorm";
+import {Column, Entity, PrimaryColumn} from "typeorm";
 import exchangeDataSource from "./exchange-data-source";
-import User from "./user";
 
 export type Operation = "add" | "del";
 export type Side = "buy" | "sell";
@@ -10,18 +9,10 @@ class Bookkeeping {
   @PrimaryColumn()
   orderId: number;
 
-  @Column({
-    type: "enum",
-    enum: ["del", "add"],
-    default: "del"
-  })
+  @Column('text')
   operation: Operation;
 
-  @Column({
-    type: "enum",
-    enum: ["buy", "sell"],
-    default: "buy"
-  })
+  @Column('text')
   side: Side;
 
   @Column()
@@ -33,10 +24,9 @@ class Bookkeeping {
   @Column()
   price: number;
 
-  @Column("userId")
-  @ManyToOne(() => User, user => user.bookEntries)
-  user: User
+  @Column()
+  userId: number
 }
 
-export const bookkeepings = exchangeDataSource.getRepository(Bookkeeping);
+export const bookkeepings = () => exchangeDataSource.getRepository(Bookkeeping);
 export default Bookkeeping;

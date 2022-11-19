@@ -13,7 +13,7 @@ app.post('/auth', async (req, res) => {
     const {email, password} = req.body;
 
     // Query user
-    const user = await users.findOneBy({email});
+    const user = await users().findOneBy({email});
     if (!user) {
         res.status(401).send("User not found.");
         return;
@@ -25,7 +25,7 @@ app.post('/auth', async (req, res) => {
             id: user.userId,
             email: user.email,
             name: user.name,
-            roles: user.roles
+            role: user.role
         };
 
         const token = jwt.sign(authUser, config.accessTokenSecret);

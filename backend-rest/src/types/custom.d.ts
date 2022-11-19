@@ -3,7 +3,7 @@ declare module 'common' {
       id: number;
       email: string;
       name: string;
-      roles: string[];
+      role: string;
    }
 }
 

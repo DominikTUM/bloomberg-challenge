@@ -12,15 +12,15 @@ app.use(bodyParser.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.get('/bookkeeping', async (req, res) => {
-    const { id, roles } = req.user as AuthorizedUser;
-    let queriedMatches: Bookkeeping[];
-    if (roles.includes(Role.ADMIN)) {
-        queriedMatches = await bookkeepings.find();
+    const { id, role } = req.user as AuthorizedUser;
+    let queriedbookkeepings: Bookkeeping[];
+    if (role  === Role.ADMIN) {
+        queriedbookkeepings = await bookkeepings().find();
     } else {
-        queriedMatches = await bookkeepings.find({where: {user: {userId: id}}});
+        queriedbookkeepings = await bookkeepings().findBy({userId: id});
     }
 
-    res.status(200).send(queriedMatches);
+    res.status(200).send(queriedbookkeepings);
 })
 
 export default app;

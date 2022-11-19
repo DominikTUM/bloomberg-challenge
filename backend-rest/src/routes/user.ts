@@ -15,7 +15,7 @@ app.post('/register', async (req, res) => {
     user.setPassword = password;
     user.name = name;
 
-    users.save(user);
+    await users().save(user);
 })
 
 export default app;
