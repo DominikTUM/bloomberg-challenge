@@ -1,7 +1,7 @@
 import {Column, Entity, PrimaryColumn} from 'typeorm';
 import exchangeDataSource from './exchange-data-source';
 
-@Entity('Match')
+@Entity('Matches')
 class Match {
   @PrimaryColumn()
     matchId: number;
@@ -16,10 +16,10 @@ class Match {
     price: string;
 
   @Column()
-    sellerId: number;
+    seller: number;
 
   @Column()
-    buyerId: number;
+    buyer: number;
 }
 
 export const matches =

@@ -26,7 +26,7 @@ app.get('/match', async (req, res) => {
     queriedMatches = await matchesCollection.find(pagingAndOrder);
   } else {
     queriedMatches = await matchesCollection.find({where: [
-      {sellerId: id}, {buyerId: id},
+      {seller: id}, {buyer: id},
     ], ...pagingAndOrder});
   }
 

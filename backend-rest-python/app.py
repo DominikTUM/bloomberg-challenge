@@ -103,7 +103,7 @@ def processOrder(cursor, mydb, orderResult):
             # buyer buys everything
             cursor.execute(
                 "INSERT INTO Matches (Security, Seller, SellerOrderID, Buyer, BuyerOrderID, Price, Qty) VALUES('" + str(security) + "', " + str(
-                    sellerID) + str(sellingOrderID) + ", " + str(buyerID) + ", " + str(buyingOrderID) + ", " + str(buyingPrice) + ", " + str(buyingQty) + ")")
+                    sellerID) + ", " + str(sellingOrderID) + ", " + str(buyerID) + ", " + str(buyingOrderID) + ", " + str(buyingPrice) + ", " + str(buyingQty) + ")")
             if side == "buy":
                 # if calling order is buy, then order can be consumed and matched sell order must be reduced
                 cursor.execute(
