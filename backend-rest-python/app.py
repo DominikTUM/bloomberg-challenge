@@ -27,7 +27,7 @@ def processOrder(cursor, mydb, orderResult):
     if (orderResult[4] == "add"):
         security = orderResult[1]
         side = orderResult[5]
-        orderID = orderResult[1]
+        orderID = orderResult[0]
         if (side == "buy"):
             buyingPrice = orderResult[3]
             buyingQty = orderResult[2]
@@ -44,10 +44,10 @@ def processOrder(cursor, mydb, orderResult):
                 mydb.commit()
                 cursor.close()
                 return "Looking for sellers"
-            sellingPrice = result[2]
-            sellingQty = result[3]
+            sellingPrice = result[3]
+            sellingQty = result[4]
             exchangeID = result[0]
-            sellerID = result[1]
+            sellerID = result[2]
         if (side == "sell"):
             sellingPrice = orderResult[3]
             sellingQty = orderResult[2]
@@ -69,7 +69,7 @@ def processOrder(cursor, mydb, orderResult):
         if (sellingQty < buyingQty):
             # seller sells everything
             cursor.execute(
-                "INSERT INTO 'Matches' (Security, Seller, Buyer, Price, Qty) VALUES(" + str(sellerID) + ", " + str(
+                "INSERT INTO Matches (Security, Seller, Buyer, Price, Qty) VALUES ('" + str(security) + "', " + str(sellerID) + ", " + str(
                     buyerID) + ", " + str(buyingPrice) + ", " + str(sellingQty) + ")")
             if side == "sell":
                 # if calling order is sell, then order can be consumed and matched buy order must be reduced
@@ -80,7 +80,6 @@ def processOrder(cursor, mydb, orderResult):
             if side == "buy":
                 # consumed the sell offer and continue
                 cursor.execute("DELETE FROM `Exchange` WHERE ExchangeID =" + str(exchangeID))
-                orderResult[2] = buyingQty - sellingQty
                 y = list(orderResult)
                 y[2] = buyingQty - sellingQty
                 orderResult = tuple(y)
