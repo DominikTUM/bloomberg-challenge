@@ -6,10 +6,12 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: test_db
+    command: --init-file /data/application/init.sql
+    volumes:
+        - ./init.sql:/data/application/init.sql
+        - db:/var/lib/mysql
     ports:
       - "3308:3306"
-    volumes:
-      - my-db:/var/lib/mysql
   phpmyadmin:
     image: phpmyadmin/phpmyadmin:latest
     restart: always
@@ -20,4 +22,4 @@ services:
     ports:
       - "8080:80"
 volumes:
-  my-db:
+  db:
