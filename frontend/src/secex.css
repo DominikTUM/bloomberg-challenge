@@ -3,15 +3,6 @@
 }
 
 
-#root {
-  max-width: 800px !important;
-  min-height: 100vh;
-  display: block;
-  padding: var(--margin);
-  margin: auto;
-  overflow: visible;
-}
-
 a {
   font-weight: 500;
 }
@@ -20,8 +11,25 @@ a {
   height: 100vh;
   max-height: calc(100vh - 2 * var(--margin));
   display: flex;
-  align-items: center;
+  align-items: center;  
+  max-width: 800px !important;
+  display: block;
+  padding: var(--margin);
+  margin: auto;
+  overflow: visible;
 }
+
+.mid-wrapper-width {
+  max-height: calc(100vh - 2 * var(--margin));
+  display: flex;
+  align-items: center;  
+  max-width: 800px !important;
+  display: block;
+  padding: var(--margin);
+  margin: auto;
+  overflow: visible;
+}
+
 
 .mid-wrapper>div {
   width: 100%;

@@ -1,3 +1,4 @@
 {
-    "accessTokenSecret": "topsecret123s"
+    "accessTokenSecret": "topsecret123s",
+    "matchingEndpoint": "http://localhost:8090/order/"
 }

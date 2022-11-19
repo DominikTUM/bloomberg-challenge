@@ -1,8 +1,10 @@
 import bodyParser from 'body-parser';
 import express from 'express';
 import CreateOrderCommand from '../commands/create-order-command';
-import {bookkeepings, users} from '../models';
+import {bookkeepings} from '../models';
 import Bookkeeping from '../models/bookkeeping';
+import config from '../configuration.json';
+import http from 'http';
 
 const app = express();
 
@@ -11,24 +13,27 @@ app.use(express.urlencoded({extended: true}));
 
 app.post('/order', async (req, res) => {
   const {id} = req.user;
-  const order = req.body as CreateOrderCommand;
+  const {price, qty, side, operation, security} =
+    req.body as CreateOrderCommand;
 
-  const user = await users().findOneBy({userId: id});
-  if (!user) {
-    res.status(400).send(`User ${id} not found`);
+  if (price < 0 || qty < 0) {
+    res.status(400).send(`Parameters invalid`);
+    return;
   }
-
+  console.log(price);
   const entry = new Bookkeeping();
-  entry.operation = order.operation;
-  entry.price = order.price;
-  entry.qty = order.qty;
-  entry.security = order.security;
-  entry.side = order.side;
+  entry.operation = operation;
+  entry.price = price;
+  entry.qty = qty;
+  console.log(entry);
+  entry.security = security;
+  entry.side = side;
   entry.userId = id;
+  console.log(entry);
 
-  bookkeepings().save(entry);
+  await (await bookkeepings()).save(entry);
 
-  // TODO: call python API
+  http.get(config.matchingEndpoint + entry.orderId, console.log);
 
   res.status(201).send('Successfully added order');
 });

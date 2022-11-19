@@ -6,7 +6,7 @@ export const tokenSlice = createSlice({
   name: 'login',
   initialState: {
     isLoggedIn: false,
-    id: '',
+    id: -1,
     email: '',
     role: '',
     name: '',
@@ -20,7 +20,7 @@ export const tokenSlice = createSlice({
         );
         state.email = parsedJwt.email;
         state.role = parsedJwt.role;
-        state.id = parsedJwt.id;
+        state.id = parseInt(parsedJwt.id, 10);
         state.isLoggedIn = true;
       }
 
@@ -47,7 +47,7 @@ export const tokenSlice = createSlice({
       state.email = '';
       state.role = '';
       state.name = '';
-      state.id = '';
+      state.id = -1;
       state.isLoggedIn = false;
     },
     storeToken: (state, action) => {

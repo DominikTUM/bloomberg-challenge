@@ -9,11 +9,11 @@ class Bookkeeping {
   @PrimaryColumn()
     orderId: number;
 
-  @Column('text')
-    operation: Operation;
+  @Column()
+    operation: string;
 
-  @Column('text')
-    side: Side;
+  @Column()
+    side: string;
 
   @Column()
     security: string;
@@ -28,5 +28,6 @@ class Bookkeeping {
     userId: number;
 }
 
-export const bookkeepings = () => exchangeDataSource.getRepository(Bookkeeping);
+export const bookkeepings =
+  async () => (await exchangeDataSource()).getRepository(Bookkeeping);
 export default Bookkeeping;

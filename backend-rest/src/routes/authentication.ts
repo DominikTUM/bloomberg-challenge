@@ -13,7 +13,7 @@ app.post('/auth', async (req, res) => {
   const {email, password} = req.body;
 
   // Query user
-  const user = await users().findOneBy({email});
+  const user = await (await users()).findOneBy({email});
   if (!user) {
     res.status(401).send('User not found.');
     return;

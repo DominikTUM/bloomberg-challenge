@@ -22,5 +22,6 @@ class Match {
     buyerId: number;
 }
 
-export const matches = () => exchangeDataSource.getRepository(Match);
+export const matches =
+  async () => (await exchangeDataSource()).getRepository(Match);
 export default Match;

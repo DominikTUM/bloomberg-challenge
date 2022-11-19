@@ -1,6 +1,6 @@
 import bodyParser from 'body-parser';
 import express from 'express';
-import User, {users} from '../models/user';
+import User, {Role, users} from '../models/user';
 import CreateUserCommand from '../commands/create-user-command';
 
 const app = express();
@@ -14,8 +14,10 @@ app.post('/register', async (req, res) => {
   user.email = email;
   user.setPassword = password;
   user.name = name;
+  user.role = Role.USER;
 
-  await users().save(user);
+  await (await users()).save(user);
+  res.status(201).send('User created');
 });
 
 export default app;

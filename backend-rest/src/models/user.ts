@@ -34,5 +34,6 @@ class User {
   }
 }
 
-export const users = () => exchangeDataSource.getRepository(User);
+export const users =
+  async () => (await exchangeDataSource()).getRepository(User);
 export default User;

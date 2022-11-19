@@ -6,7 +6,7 @@ import User from './user';
 
 dotenv.config();
 
-export default new DataSource({
+export default () => new DataSource({
   type: 'mysql',
   host: process.env.DB_HOST,
   port: parseInt(process.env.DB_PORT || '', 10),
@@ -15,7 +15,7 @@ export default new DataSource({
   database: process.env.DB_NAME,
   synchronize: false,
   logging: true,
-  entities: [Bookkeeping, Match, User],
+  entities: [Match, User, Bookkeeping],
   subscribers: [],
   migrations: [],
-});
+}).initialize();

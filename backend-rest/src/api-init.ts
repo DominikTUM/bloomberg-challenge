@@ -5,6 +5,8 @@ import authenticate from './middleware/authentication';
 import authentication from './routes/authentication';
 import order from './routes/order';
 import match from './routes/match';
+import bookkeeping from './routes/bookkeeping';
+import user from './routes/user';
 
 
 const corsOptions = {
@@ -34,4 +36,6 @@ export default function initApi(app: Express) {
   app.use(authentication);
   app.use(order);
   app.use(match);
+  app.use(bookkeeping);
+  app.use(user);
 };
