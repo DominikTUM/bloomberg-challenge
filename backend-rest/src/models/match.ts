@@ -1,12 +1,12 @@
 import {Column, Entity, ManyToOne, PrimaryColumn} from "typeorm";
-import exchangeDataSource from "./ExchangeDataSource";
+import exchangeDataSource from "./exchange-data-source";
 import User from "./user";
 
 const userSelector = () => User;
 @Entity()
 class Match {
   @PrimaryColumn()
-  id: number;
+  matchId: number;
 
   @Column()
   security: string;

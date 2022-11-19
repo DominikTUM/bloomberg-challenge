@@ -1,5 +1,5 @@
 import {Column, Entity, ManyToOne, PrimaryColumn} from "typeorm";
-import exchangeDataSource from "./ExchangeDataSource";
+import exchangeDataSource from "./exchange-data-source";
 import User from "./user";
 
 export type Operation = "add" | "del";
@@ -33,6 +33,7 @@ class Bookkeeping {
   @Column()
   price: number;
 
+  @Column("userId")
   @ManyToOne(() => User, user => user.bookEntries)
   user: User
 }

@@ -1,6 +1,6 @@
 import {Column, Entity, OneToMany, PrimaryColumn} from "typeorm";
 import Bookkeeping from "./bookkeeping";
-import exchangeDataSource from "./ExchangeDataSource";
+import exchangeDataSource from "./exchange-data-source";
 import Match from "./match";
 import crypto from 'crypto';
 
@@ -10,7 +10,7 @@ export enum Role { USER = "user", ADMIN = "admin" };
 @Entity()
 class User {
   @PrimaryColumn()
-  id: number;
+  userId: number;
 
   @Column()
   email: string
@@ -39,11 +39,11 @@ class User {
   sells: Match[]
 
   public set setPassword(password: string) {
-    this.password = crypto.createHash('sha256').update(`${password}${this.id}`).digest('hex');
+    this.password = crypto.createHash('sha256').update(`${password}${this.userId}`).digest('hex');
   }
 
   public validatePassword(password: string) {
-    return crypto.createHash('sha256').update(`${password}${this.id}`).digest('hex') === this.password
+    return crypto.createHash('sha256').update(`${password}${this.userId}`).digest('hex') === this.password
   }
 
 }
