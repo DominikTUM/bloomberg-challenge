@@ -1,6 +1,9 @@
 declare module 'common' {
   export interface AuthorizedUser {
-      _id: string;
+      id: number;
+      email: string;
+      name: string;
+      roles: string[];
    }
 }
 

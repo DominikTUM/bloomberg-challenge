@@ -4,6 +4,9 @@ import cors from 'cors';
 import authenticate from './middleware/authentication';
 
 import authentication from './routes/authentication';
+import order from './routes/order';
+import match from './routes/match';
+import ExchangeDataSource from './models/ExchangeDataSource';
 
 dotenv.config();
 
@@ -33,7 +36,13 @@ app.get('/', (req, res) => {
 
 // Setup endpoints
 app.use(authentication);
+app.use(order);
+app.use(match);
 
-app.listen(process.env.APP_PORT, () => {
-    console.log(`Connected`);
-});
+ExchangeDataSource.initialize().then(() => {
+    console.log('DB connection initialized');
+    app.listen(process.env.APP_PORT, () => {
+        console.log(`Connected`);
+    });
+})
+.catch(console.log);
