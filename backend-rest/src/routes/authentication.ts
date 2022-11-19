@@ -22,7 +22,7 @@ app.post('/auth', async (req, res) => {
     if (user.validatePassword(password)) {
 
         const authUser : AuthorizedUser = {
-            id: user.id,
+            id: user.userId,
             email: user.email,
             name: user.name,
             roles: user.roles

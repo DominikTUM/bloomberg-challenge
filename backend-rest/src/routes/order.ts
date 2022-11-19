@@ -17,7 +17,7 @@ app.post('/order', async (req, res) => {
     const { id } = req.user;
     const order = req.body as CreateOrderCommand;
     
-    const user = await users.findOneBy({id})
+    const user = await users.findOneBy({userId: id})
     if (!user) {
         res.status(400).send(`User ${id} not found`);
     }

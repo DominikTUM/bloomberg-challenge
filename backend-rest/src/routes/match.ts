@@ -18,7 +18,7 @@ app.get('/match', async (req, res) => {
         queriedMatches = await matches.find();
     } else {
         queriedMatches = await matches.find({where: [
-            {seller: {id}}, {buyer: {id}}
+            {seller: {userId: id}}, {buyer: {userId: id}}
         ]})
     }
 

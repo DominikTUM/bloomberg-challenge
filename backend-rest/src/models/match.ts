@@ -6,7 +6,7 @@ const userSelector = () => User;
 @Entity()
 class Match {
   @PrimaryColumn()
-  id: number;
+  matchId: number;
 
   @Column()
   security: string;

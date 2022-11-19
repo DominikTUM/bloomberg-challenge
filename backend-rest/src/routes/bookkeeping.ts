@@ -17,7 +17,7 @@ app.get('/bookkeeping', async (req, res) => {
     if (roles.includes(Role.ADMIN)) {
         queriedMatches = await bookkeepings.find();
     } else {
-        queriedMatches = await bookkeepings.find({where: {user: {id}}});
+        queriedMatches = await bookkeepings.find({where: {user: {userId: id}}});
     }
 
     res.status(200).send(queriedMatches);
