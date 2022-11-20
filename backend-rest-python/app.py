@@ -118,6 +118,18 @@ def processOrder(cursor, mydb, orderResult):
                 orderResult = tuple(y)
                 mydb.commit()
                 return processOrder(cursor, mydb, orderResult)
+    else:    
+        orderID = orderResult[0]
+        Qty = orderResult[2]
+        cursor.execute("SELECT * FROM `MATCHES` Where BuyerOrderID=" + str(orderID) + " OR SellerOrderID="+ str(orderID))
+        result = cursor.fetchone()
+        if (result == None):
+            cursor.execute(
+                "UPDATE `Bookkeeping` SET qty = QTY-" + str(Qty) + " WHERE OrderID = " + str(
+                    orderID))
+            mydb.commit()
+        else:
+            return False
     return "operation executed"
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=8090) # This statement starts the server on your local machine.
