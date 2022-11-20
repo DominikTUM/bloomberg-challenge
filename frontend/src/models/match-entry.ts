@@ -3,8 +3,8 @@ interface MatchEntry {
   security: string;
   qty: number;
   price: number;
-  sellerId: number;
-  buyerId: number;
+  seller: number;
+  buyer: number;
 }
 
 export default MatchEntry;

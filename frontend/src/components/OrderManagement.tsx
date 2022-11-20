@@ -6,7 +6,7 @@ import CreateOrder from './CreateOrder';
 export default function OrderManagement() {
   const [operation, setOperation] = useState<'add' | 'del'>('add');
   const [messageApi, contextHolder] = message.useMessage();
-  
+
   return <div className='mid-wrapper'>
     {contextHolder}
     <Card title="Operation">

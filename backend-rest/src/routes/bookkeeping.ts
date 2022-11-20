@@ -23,10 +23,10 @@ app.get('/bookkeeping', async (req, res) => {
   };
   const bookkeepingCollection = await bookkeepings();
   if (role === Role.ADMIN) {
-    queriedBookkeepings = await bookkeepingCollection.find();
+    queriedBookkeepings = await bookkeepingCollection.find(pagingAndOrder);
   } else {
     queriedBookkeepings = await bookkeepingCollection
-        .findBy({userId: id, ...pagingAndOrder});
+        .find({where: {userId: id}, ...pagingAndOrder});
   }
 
   res.status(200).send(queriedBookkeepings);

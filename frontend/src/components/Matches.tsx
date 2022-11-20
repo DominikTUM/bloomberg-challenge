@@ -49,7 +49,7 @@ export default function Matches() {
               <Badge.Ribbon placement='start' text={item.security}>
                 <Card title={`Transaction amount ${item.qty * item.price} €`}
                   size="default" className='mid-wrapper-width'>
-                  {item.buyerId === userId?
+                  {item.buyer === userId?
                   <Tag color="green">Buy</Tag>:
                   <Tag color="red">Sell</Tag>}
                   {item.qty} Shares @ {item.price} €
